@@ -5,19 +5,19 @@ LIST ENDPOINT:
 
 LAPORAN ============================================================
 [GET]
-baseurl/api/laporan/all/ (select all laporan)
-baseurl/api/laporan/all/limit/(num) (select all with limit)
-baseurl/api/laporan/id_user/(num) (select laporan by id user)
-baseurl/api/laporan/id_laporan/(num) (select laporan by id laporan)
+baseurl/api/laporan/all/ (select all laporan) <br>
+baseurl/api/laporan/all/limit/(num) (select all with limit) <br>
+baseurl/api/laporan/id_user/(num) (select laporan by id user) <br>
+baseurl/api/laporan/id_laporan/(num) (select laporan by id laporan) <br>
 
 USER ===============================================================
 [GET]
-baseurl/api/auth/all (select all user)
-baseurl/api/auth/id_user/(num) (select user by id user)
-baseurl/api/auth/level/(num) (select user by level)
+baseurl/api/auth/all (select all user) <br> 
+baseurl/api/auth/id_user/(num) (select user by id user) <br>
+baseurl/api/auth/level/(num) (select user by level) <br>
 
 PEMBERITAHUAN ======================================================
 [GET]
-baseurl/api/pemberitahuan/all (select all pemberitahuan)
-baseurl/api/pemberitahuan/id_pemberitahuan/(num) (select pemberitahuan by id pemberitahuan)
-baseurl/api/pemberitahuan/id_user/(num) (select pemberitahuan by id user)
+baseurl/api/pemberitahuan/all (select all pemberitahuan) <br>
+baseurl/api/pemberitahuan/id_pemberitahuan/(num) (select pemberitahuan by id pemberitahuan) <br>
+baseurl/api/pemberitahuan/id_user/(num) (select pemberitahuan by id user) <br>
