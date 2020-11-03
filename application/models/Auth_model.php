@@ -16,6 +16,8 @@ class Auth_model extends CI_Model {
     }
 
     public function getUser($tipe, $param = NULL){
+        $this->db->order_by('id_user', 'DESC');
+        
         if ($tipe == 'all'){
             return $this->db->get('tb_user')->result_array();
         }

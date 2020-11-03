@@ -1,5 +1,5 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
 | -------------------------------------------------------------------------
@@ -55,18 +55,19 @@ $route['translate_uri_dashes'] = true;
 
 //api laporan
 $route['api/laporan/id_laporan/(:num)'] = 'api/laporan/index/id_laporan/$1';
+$route['api/laporan/all/limit/(:num)'] = 'api/laporan/index/all//$1';
 $route['api/laporan/id_user/(:num)'] = 'api/laporan/index/id_user/$1';
 $route['api/laporan/(:num)'] = 'api/laporan/index/$1';
 
 //api pemberitahuan
 $route['api/pemberitahuan/id_pemberitahuan/(:num)'] = 'api/pemberitahuan/index/id_pemberitahuan/$1';
 $route['api/pemberitahuan/id_user/(:num)'] = 'api/pemberitahuan/index/id_user/$1';
-$route['api/pemberitahuan/(:num)'] = 'api/pemberitahuan/index/$1';
+$route['api/pemberitahuan/all'] = 'api/pemberitahuan/index/all';
 
 //api user
 $route['api/auth/id_user/(:num)'] = 'api/auth/index/id_user/$1';
 $route['api/auth/level/(:num)'] = 'api/auth/index/level/$1';
-$route['api/auth/(:num)'] = 'api/auth/index/$1';
+$route['api/auth/all'] = 'api/auth/index/all';
 
 /*
 | -------------------------------------------------------------------------

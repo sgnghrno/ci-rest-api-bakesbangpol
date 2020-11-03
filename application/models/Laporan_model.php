@@ -15,8 +15,13 @@ class Laporan_model extends CI_Model {
         return $this->db->insert('tb_laporan', $data);
     }
 
-    public function getLaporan($tipe, $param = NULL){
-        if ($tipe == 'all'){
+    public function getLaporan($tipe, $param = NULL, $limit = NULL){
+        if ($limit != NULL) {
+            $this->db->limit($limit);            
+        }
+        
+        if ($tipe == 'all'){            
+            $this->db->order_by('id_laporan', 'DESC');
             return $this->db->get('tb_laporan')->result_array();
         }
 
@@ -25,7 +30,8 @@ class Laporan_model extends CI_Model {
         }
 
         if ($tipe == 'id_user'){
-            return $this->db->get_where('tb_laporan', ['id_user' => $param])->row_array();
+            $this->db->order_by('id_laporan', 'DESC');
+            return $this->db->get_where('tb_laporan', ['id_user' => $param])->result_array();
         }
     }
 

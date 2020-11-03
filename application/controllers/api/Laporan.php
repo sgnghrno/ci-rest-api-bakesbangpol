@@ -99,18 +99,24 @@ class Laporan extends CI_Controller
 
     // web.com/api/laporan/index/id_laporan/2
 
-    public function index_get($tipe = 'all', $id = null){        
+    public function index_get($tipe = 'all', $id = null, $limit = null)
+    {
 
         if ($tipe == 'all') {
-            $data_laporan = $this->Laporan_model->getLaporan('all');
-            
-            if ($data_laporan){
+            // jika ada limit, maka data hanya akan ditampilkan dibatasi sesuai limit
+            if ($limit != null) {
+                $data_laporan = $this->Laporan_model->getLaporan('all', NULL, $limit);
+            } else {
+                $data_laporan = $this->Laporan_model->getLaporan('all');
+            }
+
+            if ($data_laporan) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Semua Laporan',
                     'data' => $data_laporan
                 ], 200);
-            }else{
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Semua Laporan',
@@ -119,16 +125,16 @@ class Laporan extends CI_Controller
         }
 
         if ($tipe == 'id_laporan') {
-            $id_laporan = $id;            
+            $id_laporan = $id;
             $data_laporan = $this->Laporan_model->getLaporan('id_laporan', $id_laporan);
 
-            if ($data_laporan){
+            if ($data_laporan) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Laporan',
                     'data' => $data_laporan
                 ], 200);
-            }else{
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Laporan',
@@ -140,13 +146,13 @@ class Laporan extends CI_Controller
             $id_user = $id;
             $data_laporan = $this->Laporan_model->getLaporan('id_user', $id_user);
 
-            if ($data_laporan){
+            if ($data_laporan) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Laporan',
                     'data' => $data_laporan
                 ], 200);
-            }else{
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Laporan',
@@ -156,23 +162,25 @@ class Laporan extends CI_Controller
     }
 
     //fungsi hapus data laporan
-    public function index_delete($id_laporan){
+    public function index_delete($id_laporan)
+    {
 
-        if ($this->Laporan_model->deleteLaporan($id_laporan)){
-                $this->response([
-                    'status' => true,
-                    'message' => 'Data Berhasil Dihapus',
-                ], 200);
-            }else{
-                $this->response([
-                    'status' => false,
-                    'message' => 'Data Berhasil Dihapus',
-                ], 401);
+        if ($this->Laporan_model->deleteLaporan($id_laporan)) {
+            $this->response([
+                'status' => true,
+                'message' => 'Data Berhasil Dihapus',
+            ], 200);
+        } else {
+            $this->response([
+                'status' => false,
+                'message' => 'Data Berhasil Dihapus',
+            ], 401);
         }
     }
 
     // test
-    public function tambahLaporan_post() {
+    public function tambahLaporan_post()
+    {
         $id_user = $this->post('id_user');
 
         // cek apakah email sudah terdaftar
@@ -185,7 +193,7 @@ class Laporan extends CI_Controller
         //         'data' => $user
         //     ], 401);
         // }
-        
+
         // data ditangkap
         $data_laporan = [
             'id_user' => $id_user,
@@ -198,10 +206,10 @@ class Laporan extends CI_Controller
             'lng' => $this->post('lng'),
             'dibuat_pada' => time()
         ];
-        
+
 
         // data diinput
-        if ($this->Laporan_model->insertLaporan($data_laporan)){
+        if ($this->Laporan_model->insertLaporan($data_laporan)) {
             $this->response([
                 'status' => true,
                 'message' => 'Laporan Berhasil!',

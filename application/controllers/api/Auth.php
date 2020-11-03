@@ -97,17 +97,18 @@ class Auth extends CI_Controller
         }
     }
 
-    public function index_get( $tipe, $id = NULL){
-        if ($tipe == 'all'){
+    public function index_get($tipe, $id = NULL)
+    {
+        if ($tipe == 'all') {
             $data_user = $this->Auth_model->getUser('all');
 
-            if ($data_user){
+            if ($data_user) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Semua Data User',
                     'data' => $data_user
                 ], 200);
-            }else{
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Semua Data User',
@@ -115,35 +116,35 @@ class Auth extends CI_Controller
             }
         }
 
-        if ($tipe == 'id_user'){
-        $id_user = $id;
-        $data_user = $this->Auth_model->getUser('id_user', $id_user);
+        if ($tipe == 'id_user') {
+            $id_user = $id;
+            $data_user = $this->Auth_model->getUser('id_user', $id_user);
 
-        if ($data_user){
-            $this->response([
-                'status' => true,
-                'message' => 'Berhasil Mendapatkan Data User',
-                'data' => $data_user
-            ], 200);
-        }else{
-            $this->response([
-                'status' => false,
-                'message' => 'Gagal Mendapatkan Data User',
-            ], 401);
-        }
-        }
-
-        if ($tipe == 'level'){
-            $id_level = $id;
-            $data_user = $this->Auth_model->getUser('level', $id_level);
-
-            if ($data_user){
+            if ($data_user) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Data User',
                     'data' => $data_user
                 ], 200);
-            }else{
+            } else {
+                $this->response([
+                    'status' => false,
+                    'message' => 'Gagal Mendapatkan Data User',
+                ], 401);
+            }
+        }
+
+        if ($tipe == 'level') {
+            $id_level = $id;
+            $data_user = $this->Auth_model->getUser('level', $id_level);
+
+            if ($data_user) {
+                $this->response([
+                    'status' => true,
+                    'message' => 'Berhasil Mendapatkan Data User',
+                    'data' => $data_user
+                ], 200);
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Data User',
@@ -153,21 +154,22 @@ class Auth extends CI_Controller
     }
 
     // test
-    public function register_post() {
+    public function register_post()
+    {
         $this->load->model('Auth_model');
         $email = $this->post('email');
 
         // cek apakah email sudah terdaftar
         $user = $this->Auth_model->getUserByEmail($email);
 
-        if($user) {
+        if ($user) {
             $this->response([
                 'status' => false,
                 'message' => 'Email telah terdaftar',
                 'data' => $user
             ], 401);
         }
-        
+
         // data ditangkap
         $data_user = [
             'level' => 2,
@@ -182,7 +184,7 @@ class Auth extends CI_Controller
         ];
 
         // data diinput
-        if ($this->Auth_model->insertUser($data_user)){
+        if ($this->Auth_model->insertUser($data_user)) {
             $this->response([
                 'status' => true,
                 'message' => 'Register Berhasil',
@@ -199,15 +201,16 @@ class Auth extends CI_Controller
     }
 
     //fungsi hapus data
-    public function index_delete($id_user){
+    public function index_delete($id_user)
+    {
 
         // hapus data
-        if ($this->Auth_model->deleteUser($id_user)){
+        if ($this->Auth_model->deleteUser($id_user)) {
             $this->response([
                 'status' => true,
                 'message' => 'Data Berhasil Dihapus',
             ], 200);
-        }else{
+        } else {
             $this->response([
                 'status' => false,
                 'message' => 'Data Berhasil Dihapus',
