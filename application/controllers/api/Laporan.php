@@ -129,10 +129,25 @@ class Laporan extends CI_Controller
             $data_laporan = $this->Laporan_model->getLaporan('id_laporan', $id_laporan);
 
             if ($data_laporan) {
+                $data_response = [
+                    'id_laporan' => $data_laporan['id_laporan'],
+                    'id_user' => $data_laporan['id_user'],
+                    'username' => $data_laporan['username'],
+                    'judul' => $data_laporan['judul'],
+                    'deskripsi' => $data_laporan['deskripsi'],
+                    'tanggal' => $data_laporan['tanggal'],
+                    'foto' => $data_laporan['foto'],
+                    'alamat' => $data_laporan['alamat_laporan'],
+                    'lat' => $data_laporan['lat'],
+                    'lng' => $data_laporan['lng'],
+                    'dibuat_pada' => $data_laporan['laporan_dibuat'],
+                ];
+
+
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Laporan',
-                    'data' => $data_laporan
+                    'data' => $data_response
                 ], 200);
             } else {
                 $this->response([

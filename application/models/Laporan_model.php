@@ -26,7 +26,11 @@ class Laporan_model extends CI_Model {
         }
 
         if ($tipe == 'id_laporan'){
-            return $this->db->get_where('tb_laporan', ['id_laporan' => $param])->row_array();
+            $this->db->select("tb_user.username, tb_laporan.*, tb_user.*, tb_laporan.alamat AS alamat_laporan, tb_laporan.dibuat_pada AS laporan_dibuat");
+            $this->db->from('tb_laporan');
+            $this->db->join('tb_user', 'tb_user.id_user = tb_laporan.id_user');
+            $this->db->where('id_laporan', $param);
+            return $this->db->get()->row_array();
         }
 
         if ($tipe == 'id_user'){

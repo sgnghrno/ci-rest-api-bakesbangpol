@@ -21,7 +21,7 @@ class Pemberitahuan_model extends CI_Model
     {
         $this->db->order_by('id_pemberitahuan', 'DESC');
 
-        if ($tipe == 'all') {
+        if ($tipe == 'all') {            
             return $this->db->get('tb_pemberitahuan')->result_array();
         }
 
