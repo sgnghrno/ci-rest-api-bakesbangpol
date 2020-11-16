@@ -1,39 +1,59 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Auth_model extends CI_Model {
+class Auth_model extends CI_Model
+{
 
-    public function getUserByEmail($email){
+    public function getUserByEmail($email)
+    {
         return $this->db->get_where('tb_user', ['email' => $email])->row_array();
     }
 
-    public function insertUser($data) {
+    public function insertUser($data)
+    {
         return $this->db->insert('tb_user', $data);
     }
 
-    public function insertLaporan($data) {
+    public function insertLaporan($data)
+    {
         return $this->db->insert('tb_user', $data);
     }
 
-    public function getUser($tipe, $param = NULL){
+    public function getUser($tipe, $param = NULL)
+    {
         $this->db->order_by('id_user', 'DESC');
-        
-        if ($tipe == 'all'){
+
+        if ($tipe == 'all') {
             return $this->db->get('tb_user')->result_array();
         }
 
-        if ($tipe == 'id_user'){
+        if ($tipe == 'id_user') {
             return $this->db->get_where('tb_user', ['id_user' => $param])->row_array();
         }
+        
+        if ($tipe == 'email') {
+            return $this->db->get_where('tb_user', ['email' => $param])->row_array();
+        }
 
-        if ($tipe == 'level'){
-            return $this->db->get_where('tb_user', ['level' => $param])->row_array();
+        if ($tipe == 'level') {
+            return $this->db->get_where('tb_user', ['level' => $param])->result_array();
         }
     }
 
-    public function deleteUser($param){
+    public function updateUser($tipe, $data, $param)
+    {
+        if ($tipe == 'id_user') {
+            return $this->db->update('tb_user', $data, ['id_user' => $param]);
+        }
+    }
+
+    public function deleteUser($param)
+    {
         return $this->db->delete('tb_user', ['id_user' => $param]);
     }
 
-
+    public function saveLoginLog($data)
+    {
+        return $this->db->insert('tb_login', $data);
+    }
 }

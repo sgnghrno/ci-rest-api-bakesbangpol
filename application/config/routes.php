@@ -49,7 +49,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | Examples: my-controller/index -> my_controller/index
 |   my-controller/my-method -> my_controller/my_method
 */
-$route['default_controller'] = 'welcome';
+$route['default_controller'] = 'auth';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = true;
 
@@ -62,12 +62,22 @@ $route['api/laporan/(:num)'] = 'api/laporan/index/$1';
 //api pemberitahuan
 $route['api/pemberitahuan/id_pemberitahuan/(:num)'] = 'api/pemberitahuan/index/id_pemberitahuan/$1';
 $route['api/pemberitahuan/id_user/(:num)'] = 'api/pemberitahuan/index/id_user/$1';
+$route['api/pemberitahuan/id_penerima/(:num)'] = 'api/pemberitahuan/index/id_penerima/$1';
 $route['api/pemberitahuan/all'] = 'api/pemberitahuan/index/all';
 
 //api user
 $route['api/auth/id_user/(:num)'] = 'api/auth/index/id_user/$1';
+$route['api/auth/profil/(:num)'] = 'api/auth/index/profil/$1';
 $route['api/auth/level/(:num)'] = 'api/auth/index/level/$1';
 $route['api/auth/all'] = 'api/auth/index/all';
+
+//auth
+$route['login'] = 'auth';
+$route['registration'] = 'auth/registration';
+$route['forgotpassword'] = 'auth/forgotpassword';
+$route['recoverpassword'] = 'auth/recoverpassword';
+$route['verifyemail'] = 'auth/verifyemail';
+$route['logout'] = 'auth/logout';
 
 /*
 | -------------------------------------------------------------------------

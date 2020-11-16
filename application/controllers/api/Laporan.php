@@ -136,7 +136,7 @@ class Laporan extends CI_Controller
                     'judul' => $data_laporan['judul'],
                     'deskripsi' => $data_laporan['deskripsi'],
                     'tanggal' => $data_laporan['tanggal'],
-                    'foto' => $data_laporan['foto'],
+                    'foto' => $data_laporan['foto_laporan'],
                     'alamat' => $data_laporan['alamat_laporan'],
                     'lat' => $data_laporan['lat'],
                     'lng' => $data_laporan['lng'],
@@ -194,50 +194,58 @@ class Laporan extends CI_Controller
     }
 
     // test
-    public function tambahLaporan_post()
+    public function tambah_post()
     {
         $id_user = $this->post('id_user');
 
-        // cek apakah email sudah terdaftar
-        // $user = $this->Auth_model->getUserById($id_user);
+        $imgName = uniqid() . '.png';
+        $path = 'assets/img/' . $imgName;
 
-        // if($user) {
-        //     $this->response([
-        //         'status' => false,
-        //         'message' => 'Email telah terdaftar',
-        //         'data' => $user
-        //     ], 401);
-        // }
+        $pengguna = $this->db->get_where('tb_user', ['id_user' => $id_user])->row_array();
 
-        // data ditangkap
-        $data_laporan = [
-            'id_user' => $id_user,
-            'judul' => $this->post('judul'),
-            'deskripsi' => $this->post('deskripsi'),
-            'tanggal' => $this->post('tanggal'),
-            'foto' => 'user-no-image.jpg',
-            'alamat' => $this->post('alamat'),
-            'lat' => $this->post('lat'),
-            'lng' => $this->post('lng'),
-            'dibuat_pada' => time()
-        ];
+        if ($pengguna) {
+            $foto_laporan = $this->post('foto');
 
+            $data = array(
+                'id_user' => $id_user,
+                'judul' => $this->post('judul'),
+                'deskripsi' => $this->post('deskripsi'),
+                'alamat' => $this->post('alamat'),
+                'lat' => $this->post('lat'),
+                'lng' => $this->post('lng'),
+                'foto' => $imgName,
+                'dibuat_pada' => time(),
+                'tanggal' => date('Y-m-d', time())
+            );
 
-        // data diinput
-        if ($this->Laporan_model->insertLaporan($data_laporan)) {
-            $this->response([
-                'status' => true,
-                'message' => 'Laporan Berhasil!',
-                'data' => $data_laporan
-            ], 200);
+            // var_dump(file_put_contents($path, base64_decode($foto_laporan))); die;
+            if ($this->db->insert('tb_laporan', $data)) {
+                if (file_put_contents($path, base64_decode($foto_laporan))) {
+                    // jika berhasil
+                    $this->set_response([
+                        'status' => true,
+                        'message' => 'Berhasil Mengupload Laporan'
+                    ], 200);
+                } else {
+                    $this->set_response([
+                        'status' => false,
+                        'message' => 'Gagal Mengupload Gambar Laporan'
+                    ], 200);
+                }
+            } else {
+                // jika gagal
+                $this->set_response([
+                    'status' => false,
+                    'message' => 'Gagal Mengupload Laporan'
+                ], 200);
+            }
         } else {
-            $this->response([
+            // jika data pengguna tidak ada
+            $this->set_response([
                 'status' => false,
-                'message' => 'Laporan Gagal!',
-                'data' => $data_laporan
-            ], 401);
+                'message' => 'User could not be found'
+            ], 404);
         }
-        // respon
     }
 
     // fungsi proses send email

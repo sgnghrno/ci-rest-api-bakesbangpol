@@ -36,6 +36,7 @@ class Pemberitahuan extends CI_Controller
         $this->__resTraitConstruct();
 
         $this->load->model('Pemberitahuan_model');
+        $this->load->model('Auth_model');
 
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
@@ -97,18 +98,19 @@ class Pemberitahuan extends CI_Controller
         }
     }
 
-    public function index_get( $tipe = 'all', $id = null){
+    public function index_get($tipe = 'all', $id = null)
+    {
 
-        if ($tipe == 'all'){
+        if ($tipe == 'all') {
             $data_pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('all');
-            
-            if ($data_pemberitahuan){
+
+            if ($data_pemberitahuan) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Semua Pemberitahuan',
                     'data' => $data_pemberitahuan
                 ], 200);
-            }else{
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Semua Pemberitahuan',
@@ -116,17 +118,37 @@ class Pemberitahuan extends CI_Controller
             }
         }
 
-        if ($tipe == 'id_pemberitahuan'){
+        if ($tipe == 'id_pemberitahuan') {
             $id_pemberitahuan = $id;
             $data_pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('id_pemberitahuan', $id_pemberitahuan);
 
-            if ($data_pemberitahuan){
+            if ($data_pemberitahuan) {
+                $data_terbaca = ['dibaca' => 1];
+
+                if (!$this->Pemberitahuan_model->updatePemberitahuan('id_pemberitahuan', $data_terbaca, $data_pemberitahuan['id_pemberitahuan'])) {
+                    $this->response([
+                        'status' => false,
+                        'message' => 'Gagal Membaca Pemberitahuan',
+                    ], 401);
+                }
+
+                $data_response = [
+                    'id_pemberitahuan' => $data_pemberitahuan['id_pemberitahuan'],
+                    'id_user' => $data_pemberitahuan['id_user'],
+                    'id_penerima' => $data_pemberitahuan['id_penerima'],
+                    'username' => $data_pemberitahuan['username'],
+                    'judul' => $data_pemberitahuan['judul'],
+                    'deskripsi' => $data_pemberitahuan['deskripsi'],
+                    'dibaca' => $data_pemberitahuan['dibaca'],
+                    'dibuat_pada' => $data_pemberitahuan['pemberitahuan_dibuat'],
+                ];
+
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Pemberitahuan',
-                    'data' => $data_pemberitahuan
+                    'data' => $data_response
                 ], 200);
-            }else{
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Pemberitahuan',
@@ -134,17 +156,35 @@ class Pemberitahuan extends CI_Controller
             }
         }
 
-        if ($tipe =='id_user'){
+        if ($tipe == 'id_user') {
             $id_user = $id;
             $data_pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('id_user', $id_user);
 
-            if ($data_pemberitahuan){
+            if ($data_pemberitahuan) {
                 $this->response([
                     'status' => true,
                     'message' => 'Berhasil Mendapatkan Pemberitahuan',
                     'data' => $data_pemberitahuan
                 ], 200);
-            }else{
+            } else {
+                $this->response([
+                    'status' => false,
+                    'message' => 'Gagal Mendapatkan Pemberitahuan',
+                ], 401);
+            }
+        }
+
+        if ($tipe == 'id_penerima') {
+            $id_penerima = $id;
+            $data_pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('id_penerima', $id_penerima);
+
+            if ($data_pemberitahuan) {
+                $this->response([
+                    'status' => true,
+                    'message' => 'Berhasil Mendapatkan Pemberitahuan',
+                    'data' => $data_pemberitahuan
+                ], 200);
+            } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Gagal Mendapatkan Pemberitahuan',
@@ -154,15 +194,16 @@ class Pemberitahuan extends CI_Controller
     }
 
     //fungsi hapus data pemberitahuan
-    public function index_delete($id_pemberitahuan){
+    public function index_delete($id_pemberitahuan)
+    {
 
         //hapus data
-        if ($this->Pemberitahuan_model->deletePemberitahuan($id_pemberitahuan)){
+        if ($this->Pemberitahuan_model->deletePemberitahuan($id_pemberitahuan)) {
             $this->response([
                 'status' => true,
                 'message' => 'Data Berhasil Dihapus',
             ], 200);
-        }else{
+        } else {
             $this->response([
                 'status' => false,
                 'message' => 'Data Berhasil Dihapus',
@@ -171,45 +212,73 @@ class Pemberitahuan extends CI_Controller
     }
 
     // test
-    public function tambahPemberitahuan_post() {
+    public function tambah_post()
+    {
         $id_user = $this->post('id_user');
 
         // cek apakah email sudah terdaftar
-        // $user = $this->Auth_model->getUserById($id_user);
+        $user = $this->Auth_model->getUser('id_user', $id_user);
 
-        // if($user) {
-        //     $this->response([
-        //         'status' => false,
-        //         'message' => 'Email telah terdaftar',
-        //         'data' => $user
-        //     ], 401);
-        // }
-        
-        // data ditangkap
-        $data_pemberitahuan = [
-            'id_user' => $id_user,
-            'judul' => $this->post('judul'),
-            'deskripsi' => $this->post('deskripsi'),
-            'dibaca' => '2',
-            'dibuat_pada' => time()
-        ];
-        
+        if (!$user) {
+            $this->response([
+                'status' => false,
+                'message' => 'User tidak terdaftar',
+            ], 404);
+        }
+
+        $all_user = $this->Auth_model->getUser('all');
+
+        $status = true;
+
+        foreach ($all_user as $penerima) {
+            // data ditangkap
+            $data_pemberitahuan = [
+                'id_user' => $id_user,
+                'id_penerima' => $penerima['id_user'],
+                'judul' => $this->post('judul'),
+                'deskripsi' => $this->post('deskripsi'),
+                'dibaca' => '2',
+                'dibuat_pada' => time()
+            ];
+
+            if ($this->Pemberitahuan_model->insertPemberitahuan($data_pemberitahuan)) {
+                $status = true;
+            } else {
+                $status = false;
+            }
+        }
 
         // data diinput
-        if ($this->Pemberitahuan_model->insertPemberitahuan($data_pemberitahuan)){
+        if ($status) {
             $this->response([
                 'status' => true,
                 'message' => 'Pemberitahuan Terkirim!',
-                'data' => $data_pemberitahuan
             ], 200);
         } else {
             $this->response([
                 'status' => false,
                 'message' => 'Pemberitahuan Tidak Terkirim!',
-                'data' => $data_pemberitahuan
             ], 401);
         }
-        // respon
+    }
+
+    public function count_get($id_penerima)
+    {
+        $pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('id_penerima_not_readed', $id_penerima);
+
+        if ($pemberitahuan) {
+            $this->response([
+                'status' => true,
+                'message' => 'Jumlah Pemberitahuan Belum Dibaca Didapatkan',
+                'count' => count($pemberitahuan)
+            ], 200);
+        } else {
+            $this->response([
+                'status' => false,
+                'message' => 'Tidak ditemukan pemberitahuan' . $id_penerima,
+                'count' => 0
+            ], 200);
+        }
     }
 
     // fungsi proses send email
