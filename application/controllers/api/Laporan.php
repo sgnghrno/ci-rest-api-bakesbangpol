@@ -35,7 +35,7 @@ class Laporan extends CI_Controller
         parent::__construct();
         $this->__resTraitConstruct();
 
-        $this->load->model('Laporan_model');
+        $this->load->model('Laporan_model');        
 
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php

@@ -39,6 +39,12 @@ class Pemberitahuan_model extends CI_Model
             return $this->db->get('tb_pemberitahuan')->result_array();
         }
 
+        if ($tipe == 'all_for_web') {
+            $this->db->select('tb_user.*, tb_pemberitahuan.*, tb_pemberitahuan.dibuat_pada AS laporan_dibuat, tb_pemberitahuan.diubah_pada AS laporan_diubah');
+            $this->db->join('tb_user', 'tb_user.id_user = tb_pemberitahuan.id_user');
+            return $this->db->get('tb_pemberitahuan')->result_array();
+        }
+
         if ($tipe == 'id_pemberitahuan') {
             $this->db->select("tb_user.username, tb_pemberitahuan.*, tb_user.*, tb_pemberitahuan.dibuat_pada AS pemberitahuan_dibuat");
             $this->db->from('tb_pemberitahuan');

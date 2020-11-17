@@ -45,6 +45,10 @@ class Auth_model extends CI_Model
         if ($tipe == 'id_user') {
             return $this->db->update('tb_user', $data, ['id_user' => $param]);
         }
+
+        if ($tipe == 'email') {
+            return $this->db->update('tb_user', $data, ['email' => $param]);
+        }
     }
 
     public function deleteUser($param)

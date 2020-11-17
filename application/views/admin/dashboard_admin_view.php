@@ -33,7 +33,7 @@
               <div class="icon">
                 <i class="fas fa-book"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url('admin/laporan') ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -48,7 +48,7 @@
               <div class="icon">
                 <i class="fas fa-bell"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url('admin/pemberitahuan'); ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -63,7 +63,7 @@
               <div class="icon">
                 <i class="fas fa-user-tie"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url('admin/users/admin'); ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -78,7 +78,7 @@
               <div class="icon">
                 <i class="fas fa-user-alt"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+              <a href="<?= base_url('admin/users/user'); ?>" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -106,7 +106,7 @@
                       <?php foreach ($all_user as $row) : ?>
                         <li>
                           <img src="<?= base_url() . 'assets/img/' . $row['foto']; ?>" style="height: 60px; width: 60px;"  alt="User Image">
-                          <a class="users-list-name" href="#"><?= $row['username'] ?></a>
+                          <a class="users-list-name" href="<?= base_url('admin/userprofile/') . $row['id_user']; ?>"><?= $row['username'] ?></a>
                           <span class="users-list-date"><?= date('d M Y', $row['dibuat_pada']); ?></span>
                         </li>
                       <?php endforeach; ?>
@@ -144,7 +144,7 @@
                             <img src="<?= base_url('assets/img/') . $laporan['foto_laporan']; ?>" alt="<?= $laporan['judul']; ?>" class="img-size-50">
                           </div>
                           <div class="product-info">
-                            <a href="<?= base_url('laporan/') . $laporan['id_laporan']; ?>" target="_blank" class="product-title"><?= $laporan['judul']; ?>
+                            <a href="<?= base_url('admin/editlaporan/') . $laporan['id_laporan']; ?>" target="_blank" class="product-title"><?= $laporan['judul']; ?>
                               <!-- <span class="badge badge-warning float-right"><i class="fa fa-eye mr-1" aria-hidden="true"></i><?= $laporan['views']; ?></span></a> -->
                               <span class="product-description">
                                 <small><?= date('d M Y H:i:s', $laporan['laporan_dibuat']) . ' oleh: ' . $laporan['username']; ?></small>
@@ -157,7 +157,7 @@
                   </div>
                   <!-- /.card-body -->
                   <div class="card-footer text-center">
-                    <a href="<?= base_url('admin/allpost'); ?>" class="uppercase">View All Laporan</a>
+                    <a href="<?= base_url('admin/laporan'); ?>" class="uppercase">View All Laporan</a>
                   </div>
                   <!-- /.card-footer -->
                 </div>
@@ -188,7 +188,7 @@
                         <img src="<?= base_url() . 'assets/img/' . $row->foto; ?>" alt="Product Image" class="img-size-50">
                       </div>
                       <div class="product-info">
-                        <a href="javascript:void(0)" class="product-title"><?= $row->username; ?>
+                        <a href="<?= base_url('admin/userprofile/') . $row->id_user; ?>" class="product-title"><?= $row->username; ?>
                           <span class="badge <?= $row->level == 1 ? 'badge-primary' : 'badge-success' ?> float-right">
                             <?php
                             if ($row->level == 1) {

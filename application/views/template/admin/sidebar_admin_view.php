@@ -82,13 +82,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url('admin/tambahUser'); ?>" class="nav-link <?= $sub_menu == 'tambah_laporan' ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/tambahlaporan'); ?>" class="nav-link <?= $sub_menu == 'tambah_laporan' ? 'active' : '' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Tambah Laporan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?= base_url('admin/users'); ?>" class="nav-link <?= $sub_menu == 'semua_laporan' ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/laporan'); ?>" class="nav-link <?= $sub_menu == 'semua_laporan' ? 'active' : '' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Semua Laporan</p>
                 </a>
@@ -107,13 +107,13 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url('admin/tambahUser'); ?>" class="nav-link <?= $sub_menu == 'tambah_pemberitahuan' ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/tambahpemberitahuan'); ?>" class="nav-link <?= $sub_menu == 'tambah_pemberitahuan' ? 'active' : '' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Tambah Pemberitahuan</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="<?= base_url('admin/users'); ?>" class="nav-link <?= $sub_menu == 'semua_pemberitahuan' ? 'active' : '' ?>">
+                <a href="<?= base_url('admin/pemberitahuan'); ?>" class="nav-link <?= $sub_menu == 'semua_pemberitahuan' ? 'active' : '' ?>">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Semua Pemberitahuan</p>
                 </a>

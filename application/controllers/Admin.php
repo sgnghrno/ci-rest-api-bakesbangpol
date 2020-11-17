@@ -6,6 +6,7 @@ class Admin extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('session');
 
         if ($this->session->userdata('level') != 1) {
             verifyAccess();
@@ -107,6 +108,118 @@ class Admin extends CI_Controller
         }
     }
 
+    // endpoint untuk tambah laporan
+    public function tambahLaporan()
+    {
+        $data['title'] = "Tambah Laporan";
+        $data['menu'] = "laporan";
+        $data['sub_menu'] = "tambah_laporan";
+        $data['sub_menu_action'] = null;
+        // user data
+        $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
+
+        // form validation config ===============================
+        $this->form_validation->set_rules('judul', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+        $this->form_validation->set_rules('tanggal', 'Tanggal', 'required|trim');
+        $this->form_validation->set_rules('lat', 'Latitude', 'required|trim');
+        $this->form_validation->set_rules('lng', 'Longitude', 'required|trim');           
+        // ===============================
+
+        if ($this->form_validation->run() == FALSE) {
+            // load view tambah user dengan template admin
+            $this->load->view('template/admin/header_admin_view', $data);
+            $this->load->view('template/admin/sidebar_admin_view');
+            $this->load->view('admin/tambah_laporan_admin_view');
+            $this->load->view('template/admin/control_admin_view');
+            $this->load->view('template/admin/footer_admin_view');
+        } else {
+            if ($_FILES['foto']['error'] != 4) {
+                $image = $this->upload_image('foto', './assets/img/');
+            } else {
+                $image = 'no-image.jpg';
+            }
+
+            $data_laporan = [
+                'id_user' => $this->session->userdata('id_user'),
+                'judul' => htmlspecialchars($this->input->post('judul', true)),
+                'deskripsi' => htmlspecialchars($this->input->post('deskripsi', true)),
+                'alamat' => htmlspecialchars($this->input->post('alamat', true)),                
+                'tanggal' => htmlspecialchars($this->input->post('tanggal', true)),                
+                'lat' => htmlspecialchars($this->input->post('lat', true)),                
+                'lng' => htmlspecialchars($this->input->post('lng', true)),                                
+                'foto' => $image,
+                'dibuat_pada' => time(),
+            ];                        
+
+            if ($this->Laporan_model->insertLaporan($data_laporan)) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Berhasil menyimpan laporan</div>');
+
+                redirect('admin/tambahlaporan');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal menyimpan laporan</div>');
+
+                redirect('admin/tambahlaporan');
+            }
+        }
+    }
+
+    // endpoint untuk tambah pemberitahuan
+    public function tambahPemberitahuan()
+    {
+        $data['title'] = "Tambah Pemberitahuan";
+        $data['menu'] = "pemberitahuan";
+        $data['sub_menu'] = "tambah_pemberitahuan";
+        $data['sub_menu_action'] = null;
+        // user data
+        $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
+
+        // form validation config ===============================
+        $this->form_validation->set_rules('judul', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
+        // ===============================
+
+        if ($this->form_validation->run() == FALSE) {
+            // load view tambah user dengan template admin
+            $this->load->view('template/admin/header_admin_view', $data);
+            $this->load->view('template/admin/sidebar_admin_view');
+            $this->load->view('admin/tambah_pemberitahuan_admin_view');
+            $this->load->view('template/admin/control_admin_view');
+            $this->load->view('template/admin/footer_admin_view');
+        } else {
+            $status_send = true;
+            $users = $this->Auth_model->getUser('all');
+
+            foreach ($users as $user) {
+                $data_pemberitahuan = [
+                    'id_user' => $this->session->userdata('id_user'),
+                    'id_penerima' => $user['id_user'],
+                    'judul' => htmlspecialchars($this->input->post('judul', true)),
+                    'deskripsi' => htmlspecialchars($this->input->post('deskripsi', true)),
+                    'dibaca' => 2,
+                    'dibuat_pada' => time(),
+                ];
+
+                if ($this->Pemberitahuan_model->insertPemberitahuan($data_pemberitahuan)) {
+                    $status_send = true;
+                } else {
+                    $status_send = false;
+                }
+            }
+
+            if ($status_send) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Berhasil mengirim pemberitahuan</div>');
+
+                redirect('admin/tambahpemberitahuan');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal mengirim pemberitahuan</div>');
+
+                redirect('admin/tambahpemberitahuan');
+            }
+        }
+    }
+
     // endpoint edit user by id
     public function userProfile($id_user)
     {
@@ -177,6 +290,107 @@ class Admin extends CI_Controller
         }
     }
 
+    // endpoint edit pemberitahuan by id
+    public function editPemberitahuan($id_pemberitahuan)
+    {
+        $data['title'] = "Edit Pemberitahuan";
+        $data['menu'] = "pemberitahuan";
+        $data['sub_menu'] = "semua_pemberitahuan";
+        $data['sub_menu_action'] = "edit_pemberitahuan";
+
+        // user data
+        $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
+        $data['pemberitahuan'] = $this->Pemberitahuan_model->getPemberitahuan('id_pemberitahuan', $id_pemberitahuan);        
+
+        // form validation config ===============================
+        $this->form_validation->set_rules('judul', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
+        // ===============================
+
+        if ($this->form_validation->run() == FALSE) {
+            // load view PROFILE dengan template admin
+            $this->load->view('template/admin/header_admin_view', $data);
+            $this->load->view('template/admin/sidebar_admin_view');
+            $this->load->view('admin/edit_pemberitahuan_admin_view');
+            $this->load->view('template/admin/control_admin_view');
+            $this->load->view('template/admin/footer_admin_view');
+        } else {
+            $data_pemberitahuan_update = [
+                'judul' => htmlspecialchars($this->input->post('judul', true)),
+                'deskripsi' => htmlspecialchars($this->input->post('deskripsi', true)),
+                'diubah_pada' => time(),
+            ];
+
+            if ($this->Pemberitahuan_model->updatePemberitahuan('id_pemberitahuan', $data_pemberitahuan_update, $id_pemberitahuan)) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Berhasil mengupdate pemberitahuan</div>');
+
+                redirect('admin/pemberitahuan');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal mengupdate pemberitahuan</div>');
+
+                redirect('admin/pemberitahuan');
+            }
+        }
+    }
+
+    // endpoint edit laporan by id
+    public function editLaporan($id_laporan)
+    {
+        $data['title'] = "Edit Laporan";
+        $data['menu'] = "laporan";
+        $data['sub_menu'] = "semua_laporan";
+        $data['sub_menu_action'] = "edit_laporan";
+
+        // user data
+        $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
+        $data['laporan'] = $this->Laporan_model->getLaporan('id_laporan', $id_laporan);                
+
+        // form validation config ===============================
+        $this->form_validation->set_rules('judul', 'Judul', 'required|trim');
+        $this->form_validation->set_rules('deskripsi', 'Deskripsi', 'required|trim');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim');
+        $this->form_validation->set_rules('tanggal', 'Tanggal', 'required|trim');
+        $this->form_validation->set_rules('lat', 'Latitude', 'required|trim');
+        $this->form_validation->set_rules('lng', 'Longitude', 'required|trim');  
+        // ===============================
+
+        if ($this->form_validation->run() == FALSE) {
+            // load view PROFILE dengan template admin
+            $this->load->view('template/admin/header_admin_view', $data);
+            $this->load->view('template/admin/sidebar_admin_view');
+            $this->load->view('admin/edit_laporan_admin_view');
+            $this->load->view('template/admin/control_admin_view');
+            $this->load->view('template/admin/footer_admin_view');
+        } else {
+            if ($_FILES['foto']['error'] != 4) {
+                $image = $this->upload_image('foto', './assets/img/');
+            } else {
+                $image = $data['laporan']['foto_laporan'];
+            }
+
+            $data_pemberitahuan_update = [                
+                'judul' => htmlspecialchars($this->input->post('judul', true)),
+                'deskripsi' => htmlspecialchars($this->input->post('deskripsi', true)),
+                'alamat' => htmlspecialchars($this->input->post('alamat', true)),                
+                'tanggal' => htmlspecialchars($this->input->post('tanggal', true)),                
+                'lat' => htmlspecialchars($this->input->post('lat', true)),                
+                'lng' => htmlspecialchars($this->input->post('lng', true)),                                
+                'foto' => $image,
+                'diubah_pada' => time(),
+            ];                        
+
+            if ($this->Laporan_model->updateLaporan('id_laporan', $data_pemberitahuan_update, $id_laporan)) {
+                $this->session->set_flashdata('message', '<div class="alert alert-success alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Berhasil mengupdate laporan</div>');
+
+                redirect('admin/laporan');
+            } else {
+                $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal mengupdate laporan</div>');
+
+                redirect('admin/laporan');
+            }
+        }
+    }
+
     // endpoint untuk all users
     public function users($level = 'all')
     {
@@ -206,6 +420,44 @@ class Admin extends CI_Controller
         $this->load->view('template/admin/footer_admin_view');
     }
 
+    // endpoint untuk all pemberitahuan
+    public function pemberitahuan()
+    {
+        $data['title'] = "Semua Pemberitahuan";
+        $data['menu'] = "pemberitahuan";
+        $data['sub_menu'] = 'semua_pemberitahuan';
+        $data['sub_menu_action'] = null;
+        // user data
+        $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
+        $data['all_pemberitahuan'] = $this->Pemberitahuan_model->getPemberitahuan('all_for_web');
+
+        // load view tambah user dengan template admin
+        $this->load->view('template/admin/header_admin_view', $data);
+        $this->load->view('template/admin/sidebar_admin_view');
+        $this->load->view('admin/pemberitahuan_admin_view');
+        $this->load->view('template/admin/control_admin_view');
+        $this->load->view('template/admin/footer_admin_view');
+    }
+
+    // endpoint untuk all laporan
+    public function laporan()
+    {
+        $data['title'] = "Semua Laporan";
+        $data['menu'] = "laporan";
+        $data['sub_menu'] = 'semua_laporan';
+        $data['sub_menu_action'] = null;
+        // user data
+        $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
+        $data['all_laporan'] = $this->Laporan_model->getLaporan('all');
+
+        // load view tambah user dengan template admin
+        $this->load->view('template/admin/header_admin_view', $data);
+        $this->load->view('template/admin/sidebar_admin_view');
+        $this->load->view('admin/laporan_admin_view');
+        $this->load->view('template/admin/control_admin_view');
+        $this->load->view('template/admin/footer_admin_view');
+    }
+
     // endpoint deleteUser
     public function deleteUser($id_user)
     {
@@ -220,6 +472,34 @@ class Admin extends CI_Controller
             $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal menghapus User</div>');
 
             redirect('admin/users');
+        }
+    }
+
+    // endpoint delete pemberitahuan
+    public function deletePemberitahuan($id_pemberitahuan)
+    {
+        if ($this->Pemberitahuan_model->deletePemberitahuan($id_pemberitahuan)) {
+            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Berhasil menghapus pemberitahuan</div>');
+
+            redirect('admin/pemberitahuan');
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal menghapus pemberitahuan</div>');
+
+            redirect('admin/pemberitahuan');
+        }
+    }
+
+    // endpoint delete Laporan
+    public function deleteLaporan($id_laporan)
+    {
+        if ($this->Laporan_model->deleteLaporan($id_laporan)) {
+            $this->session->set_flashdata('message', '<div class="alert alert-info alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Berhasil menghapus laporan</div>');
+
+            redirect('admin/laporan');
+        } else {
+            $this->session->set_flashdata('message', '<div class="alert alert-danger alert-dismissible"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>Gagal menghapus laporan</div>');
+
+            redirect('admin/laporan');
         }
     }
 
@@ -1090,11 +1370,11 @@ class Admin extends CI_Controller
         // validation config
         if ($this->input->post('update_action') == 'profile') {
             // config edit profil
-            $this->form_validation->set_rules('username', 'username', 'required|trim|max_length[50]');            
-            $this->form_validation->set_rules('alamat', 'alamat', 'required|trim|max_length[50]');            
+            $this->form_validation->set_rules('username', 'username', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('alamat', 'alamat', 'required|trim|max_length[50]');
             $this->form_validation->set_rules('jenis_kelamin', 'jenis_kelamin', 'required|trim|max_length[10]');
             $this->form_validation->set_rules('telepon', 'telepon', 'required|trim|max_length[15]|numeric');
-            $this->form_validation->set_rules('nik', 'nik', 'required|trim|max_length[20]|numeric');            
+            $this->form_validation->set_rules('nik', 'nik', 'required|trim|max_length[20]|numeric');
             $this->form_validation->set_rules('email', 'email', 'required|valid_email|max_length[50]');
         } else {
             $this->form_validation->set_rules('password_lama', 'Password', 'required|trim|max_length[20]');

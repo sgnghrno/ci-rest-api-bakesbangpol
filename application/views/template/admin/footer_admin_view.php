@@ -2,10 +2,10 @@
   <footer class="main-footer">
     <!-- To the right -->
     <div class="float-right d-none d-sm-inline">
-      Stunting Early Prevention Application (STEP-A)
+      PELAPORAN
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; <?= date('Y', time()); ?> <a href="<?= base_url(); ?>">STEP-A</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; <?= date('Y', time()); ?> <a href="<?= base_url(); ?>">PELAPORAN</a>.</strong> All rights reserved.
   </footer>
   </div>
   <!-- ./wrapper -->
@@ -156,7 +156,7 @@
     </script>
   <?php endif; ?>
 
-  <?php if ($sub_menu == 'tambah_post_baru' || $sub_menu == 'tambah_pengguna' || $sub_menu == 'semua_pengguna' || $sub_menu == 'semua_remaja' || $sub_menu == 'semua_kehamilan' || $sub_menu == 'semua_bayi_balita') : ?>
+  <?php if ($sub_menu == 'tambah_post_baru' || $sub_menu == 'tambah_pengguna' || $sub_menu == 'semua_pengguna' || $sub_menu == 'semua_pemberitahuan' || $sub_menu == 'semua_laporan') : ?>
     <script>
       $(function() {
         // Summernote
@@ -166,7 +166,7 @@
     </script>
   <?php endif; ?>
 
-  <?php if ($sub_menu_action == 'get_post' || $sub_menu == 'semua_pengguna' || $sub_menu == 'semua_remaja' || $sub_menu == 'semua_kehamilan' || $sub_menu == 'semua_bayi_balita') : ?>
+  <?php if ($sub_menu_action == 'get_post' || $sub_menu == 'semua_pengguna' || $sub_menu == 'semua_pemberitahuan' || $sub_menu == 'semua_laporan') : ?>
     <script>
       $(function() {
         // data table

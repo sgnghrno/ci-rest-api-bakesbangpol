@@ -32,7 +32,7 @@
                               <h5 class="widget-user-desc text-right"><?= $user['level'] == 1 ? 'Admin' : 'User' ?></h5>
                           </div>
                           <div class="widget-user-image">
-                              <img class="img-circle" src="<?= base_url('assets/img/') . $user['foto']; ?>" alt="User Avatar">
+                              <img class="img-circle" style="width: 90px; height: 90px" src="<?= base_url('assets/img/') . $user['foto']; ?>" alt="User Avatar">
                           </div>
                           <div class="card-footer">
                               <div class="row">

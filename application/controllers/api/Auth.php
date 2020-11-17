@@ -320,13 +320,13 @@ class Auth extends CI_Controller
     }
 
     // fungsi proses send email
-    private function _sendEmail($token, $email, $type)
+    private function _sendEmail($email, $data)
     {
         $config = [
             'protocol'      => 'smtp',
-            'smtp_host'     => 'smtp.gmail.com',
-            'smtp_user'     => 'indiekostteknotirta@gmail.com',
-            'smtp_pass'     => 'indieforever',
+            'smtp_host'     => 'step-ap.online',
+            'smtp_user'     => 'admin@step-ap.online',
+            'smtp_pass'     => 'Stepapon@2020',
             'smtp_port'     => 465,
             'mailtype'      => 'html',
             'charset'       => 'utf-8',
@@ -338,26 +338,19 @@ class Auth extends CI_Controller
         $this->load->library('email', $config);
         $this->email->initialize($config);
 
-        $this->email->from('indiekostteknotirta@gmail.com', 'INDIEKOST');
+        $this->email->from('admin-no-reply@pelaporan.com', 'PELAPORAN APP');
         $this->email->to($email);
 
-        if ($type == 'verify') {
-            $message = 'Klik link berikut untuk melakukan aktivasi akun anda <a href="' . base_url("auth/verify") . '?email=' . $email . '&token=' . $token . '">AKTIVASI AKUN</a>';
+        $message = $this->load->view('email/email_view.php', $data, true);
 
-            $this->email->subject('Verifikasi Akun INDIEKOST');
-            $this->email->message($message);
-        } else if ($type == 'forgot') {
-            $message = 'Klik link berikut untuk mengatur ulang password akun anda <a href="' . base_url("auth/resetpassword") . '?email=' . $email . '&token=' . $token . '">RESET PASSWORD</a>';
-
-            $this->email->subject('Reset Password Akun INDIEKOST');
-            $this->email->message($message);
-        }
+        $this->email->subject($data['heading']);
+        $this->email->message($message);
 
         if ($this->email->send()) {
             return true;
         } else {
             echo $this->email->print_debugger();
-            die;
+            return false;
         }
     }
 
@@ -367,36 +360,48 @@ class Auth extends CI_Controller
             // jika ada email
             $email = $this->post('email');
 
-            $user = $this->db->get_where('pengguna', ['email_pengguna' => $email, 'is_active' => 1])->row_array();
+            $user = $this->db->get_where('tb_user', ['email' => $email])->row_array();
 
             if ($user) {
                 $token = uniqid(true);
 
                 $user_token = [
-                    'email'         => $email,
+                    'id_user'         => $user['id_user'],
                     'token'         => $token,
-                    'date_created'  => time()
+                    'dibuat_pada'  => time()
                 ];
 
-                $this->db->insert('user_token', $user_token);
+                $this->db->insert('tb_token', $user_token);
 
-                $this->_sendEmail($token, $email, 'forgot');
+                // data untuk ditampilkan pada email
+                $data['title'] = 'Recovery Password Akun PELAPORAN APP';
+                $data['heading'] = 'Recovery Password Akun PELAPORAN APP';
+                $data['body'] = 'Silahkan klik tombol dibawah untuk mereset password akun anda yang terdaftar dengan email: ' . $email . '.';
+                $data['url'] = base_url() . 'recoverpassword?email=' . $email . '&token=' . $token;
+                $data['button'] = 'Recover Password';
 
-                $this->response([
-                    'status' => true,
-                    'message' => 'Berhasil mengirim email reset password'
-                ], 200);
+                if ($this->_sendEmail($email, $data)) {
+                    $this->response([
+                        'status' => true,
+                        'message' => 'Email untuk reset password telah dikirim ke ' .$email. '. Harap periksa email anda.'
+                    ], 200);
+                } else {
+                    $this->response([
+                        'status' => false,
+                        'message' => 'Gagal mengirim email reset password'
+                    ], 200);
+                }
             } else {
                 $this->response([
                     'status' => false,
                     'message' => 'Email tidak terdaftar atau belum aktif'
-                ], 401);
+                ], 200);
             }
         } else {
             $this->response([
                 'status' => false,
                 'message' => 'Email tidak ditemukan'
-            ], 401);
+            ], 200);
         }
     }
 }

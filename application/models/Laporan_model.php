@@ -1,18 +1,16 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Laporan_model extends CI_Model {
-
-    // public function getUserByEmail($email){
-    //     return $this->db->get_where('tb_user', ['email' => $email])->row_array();
-    // }
-
-    // public function insertUser($data) {
-    //     return $this->db->insert('tb_user', $data);
-    // }
+class Laporan_model extends CI_Model {    
     
     public function insertLaporan($data) {
         return $this->db->insert('tb_laporan', $data);
+    }
+
+    public function updateLaporan($tipe = 'id_laporan', $data, $param) {
+        if ($tipe == 'id_laporan') {
+            return $this->db->update('tb_laporan', $data, ['id_laporan' => $param]);
+        }
     }
 
     public function getLaporan($tipe, $param = NULL, $limit = NULL){
@@ -25,7 +23,7 @@ class Laporan_model extends CI_Model {
         }
         
         if ($tipe == 'all'){
-            $this->db->select('tb_user.*, tb_laporan.*, tb_laporan.foto AS foto_laporan, tb_laporan.dibuat_pada AS laporan_dibuat');
+            $this->db->select('tb_user.*, tb_laporan.*, tb_laporan.alamat AS alamat_laporan, tb_laporan.foto AS foto_laporan, tb_laporan.dibuat_pada AS laporan_dibuat, tb_laporan.diubah_pada AS laporan_diubah');
             $this->db->join('tb_user', 'tb_user.id_user = tb_laporan.id_user');
             $this->db->order_by('id_laporan', 'DESC');
             return $this->db->get('tb_laporan')->result_array();
