@@ -2,7 +2,7 @@
 
 use Restserver\Libraries\REST_Controller;
 
-use function PHPSTORM_META\type;
+// use function PHPSTORM_META\type;
 
 defined('BASEPATH') or exit('No direct script access allowed');
 

@@ -29,6 +29,14 @@ class Laporan_model extends CI_Model {
             return $this->db->get('tb_laporan')->result_array();
         }
 
+        if ($tipe == 'wilayah'){
+            $this->db->select('tb_user.*, tb_laporan.*, tb_laporan.alamat AS alamat_laporan, tb_laporan.foto AS foto_laporan, tb_laporan.dibuat_pada AS laporan_dibuat, tb_laporan.diubah_pada AS laporan_diubah');
+            $this->db->join('tb_user', 'tb_user.id_user = tb_laporan.id_user');
+            $this->db->like('tb_laporan.alamat', $param);
+            $this->db->order_by('id_laporan', 'DESC');
+            return $this->db->get('tb_laporan')->result_array();
+        }
+
         if ($tipe == 'id_laporan'){
             $this->db->select("tb_user.username, tb_laporan.*, tb_user.*, tb_laporan.alamat AS alamat_laporan, tb_laporan.dibuat_pada AS laporan_dibuat, tb_laporan.foto AS foto_laporan");
             $this->db->from('tb_laporan');

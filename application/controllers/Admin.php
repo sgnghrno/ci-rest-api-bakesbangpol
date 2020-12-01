@@ -59,12 +59,12 @@ class Admin extends CI_Controller
 
         // form validation config ===============================
         $this->form_validation->set_rules('username', 'Username', 'required|trim|max_length[50]');
-        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim|max_length[50]');
+        $this->form_validation->set_rules('alamat', 'Alamat', 'required|trim|max_length[100]');
         $this->form_validation->set_rules('level', 'Hak akses', 'required|trim');
         $this->form_validation->set_rules('jenis_kelamin', 'Jenis kelamin', 'required|trim|max_length[10]');
         $this->form_validation->set_rules('telepon', 'telepon', 'required|is_unique[tb_user.telepon]|trim|max_length[15]|numeric');
         $this->form_validation->set_rules('nik', 'NIK', 'required|is_unique[tb_user.nik]|trim|max_length[20]|numeric');
-        $this->form_validation->set_rules('email', 'email', 'required|trim|is_unique[tb_user.email]|valid_email|max_length[50]');
+        $this->form_validation->set_rules('email', 'email', 'required|trim|is_unique[tb_user.email]|valid_email|max_length[100]');
         $this->form_validation->set_rules('password', 'password', 'required|trim|max_length[50]');
         $this->form_validation->set_rules('password_confirmation', 'Password Confirmation', 'required|trim|max_length[50]|matches[password]');
         // ===============================
@@ -234,12 +234,12 @@ class Admin extends CI_Controller
 
         // form validation config ===============================
         $this->form_validation->set_rules('username', 'username', 'required|trim|max_length[50]');
-        $this->form_validation->set_rules('alamat', 'alamat', 'required|trim|max_length[50]');
+        $this->form_validation->set_rules('alamat', 'alamat', 'required|trim|max_length[100]');
         $this->form_validation->set_rules('jenis_kelamin', 'jenis_kelamin', 'required|trim|max_length[10]');
         $this->form_validation->set_rules('telepon', 'telepon', 'required|trim|max_length[15]|numeric');
-        $this->form_validation->set_rules('nik', 'nik', 'required|trim|max_length[15]|numeric');
+        $this->form_validation->set_rules('nik', 'nik', 'required|trim|max_length[20]|numeric');
         $this->form_validation->set_rules('level', 'level', 'required|trim');
-        $this->form_validation->set_rules('email', 'email', 'required|trim|valid_email|max_length[50]');
+        $this->form_validation->set_rules('email', 'email', 'required|trim|valid_email|max_length[100]');
         $this->form_validation->set_rules('password', 'password', 'trim|max_length[50]');
         // ===============================
 
@@ -405,7 +405,7 @@ class Admin extends CI_Controller
         $data['count_all_users'] = count($this->Auth_model->getUser('all'));
 
         if ($level == 'all') {
-            $data['users'] = $this->Auth_model->getUser('all');
+            $data['users'] = $this->Auth_model->getUser('all');            
         } else if ($level == 'admin') {
             $data['users'] = $this->Auth_model->getUser('level', 1);
         } else if ($level == 'user') {
@@ -1371,11 +1371,11 @@ class Admin extends CI_Controller
         if ($this->input->post('update_action') == 'profile') {
             // config edit profil
             $this->form_validation->set_rules('username', 'username', 'required|trim|max_length[50]');
-            $this->form_validation->set_rules('alamat', 'alamat', 'required|trim|max_length[50]');
+            $this->form_validation->set_rules('alamat', 'alamat', 'required|trim|max_length[100]');
             $this->form_validation->set_rules('jenis_kelamin', 'jenis_kelamin', 'required|trim|max_length[10]');
             $this->form_validation->set_rules('telepon', 'telepon', 'required|trim|max_length[15]|numeric');
             $this->form_validation->set_rules('nik', 'nik', 'required|trim|max_length[20]|numeric');
-            $this->form_validation->set_rules('email', 'email', 'required|valid_email|max_length[50]');
+            $this->form_validation->set_rules('email', 'email', 'required|valid_email|max_length[100]');
         } else {
             $this->form_validation->set_rules('password_lama', 'Password', 'required|trim|max_length[20]');
             $this->form_validation->set_rules('password_baru', 'Password', 'required|trim|max_length[20]|min_length[6]');

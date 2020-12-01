@@ -1,6 +1,6 @@
 <div class="login-box">
   <div class="login-logo">
-    <a href="<?= base_url('login'); ?>">STEP - <b>A</b></a>
+    <a href="<?= base_url('login'); ?>">PELAPORAN <b>Bakesbangpol</b></a>
   </div>
   <!-- /.login-logo -->
   <div class="card">

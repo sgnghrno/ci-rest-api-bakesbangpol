@@ -27,6 +27,14 @@ class Auth_model extends CI_Model
             return $this->db->get('tb_user')->result_array();
         }
 
+        if ($tipe == 'all_for_web') {
+            $this->db->select('tb_user.*, tb_user.dibuat_pada AS user_dibuat, tb_user.diubah_pada AS user_diubah, COUNT(tb_laporan.id_laporan) AS total_laporan');
+            $this->db->from('tb_user');
+            $this->db->join('tb_laporan', 'tb_laporan.id_user = tb_user.id_user');            
+            $this->db->group_by('tb_user.id_user');
+            return $this->db->get()->result_array();
+        }
+
         if ($tipe == 'id_user') {
             return $this->db->get_where('tb_user', ['id_user' => $param])->row_array();
         }

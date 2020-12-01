@@ -2,7 +2,7 @@
 
 use Restserver\Libraries\REST_Controller;
 
-use function PHPSTORM_META\type;
+// use function PHPSTORM_META\type;
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
@@ -35,7 +35,9 @@ class Laporan extends CI_Controller
         parent::__construct();
         $this->__resTraitConstruct();
 
-        $this->load->model('Laporan_model');        
+        $this->load->model('Auth_model');
+        $this->load->model('Laporan_model');
+        $this->load->model('Pemberitahuan_model');
 
         // Configure limits on our controller methods
         // Ensure you have created the 'limits' table and enabled 'limits' within application/config/rest.php
@@ -190,6 +192,91 @@ class Laporan extends CI_Controller
                 'status' => false,
                 'message' => 'Data Berhasil Dihapus',
             ], 401);
+        }
+    }
+
+    public function home_get($tipe, $id_user, $wilayah = null)
+    {
+        if ($tipe == 'all') {
+            $laporan = $this->Laporan_model->getLaporan('all');
+            $laporan_user = $this->Laporan_model->getLaporan('id_user', $id_user);
+            $pelapor = $this->Auth_model->getUser('level', 2);
+            $pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('id_penerima_not_readed', $id_user);
+
+            if (!$laporan) {
+                $count_laporan = 0;
+            } else {
+                $count_laporan = count($laporan);
+            }
+
+            if (!$laporan_user) {
+                $count_laporan_user = 0;
+            } else {
+                $count_laporan_user = count($laporan_user);
+            }
+
+            if (!$pelapor) {
+                $count_pelapor = 0;
+            } else {
+                $count_pelapor = count($pelapor);
+            }
+
+            if (!$pemberitahuan) {
+                $count_pemberitahuan = 0;
+            } else {
+                $count_pemberitahuan = count($pemberitahuan);
+            }
+
+            $this->response([
+                'status' => true,
+                'message' => 'Data Berhasil Didapatkan',
+                'count_laporan' => $count_laporan,
+                'count_laporan_user' => $count_laporan_user,
+                'count_pelapor' => $count_pelapor,
+                'count_pemberitahuan' => $count_pemberitahuan,
+                'laporan' => $laporan,
+            ], 200);
+        } 
+        
+        if ($tipe == 'wilayah'){
+            $laporan = $this->Laporan_model->getLaporan('wilayah', $wilayah);
+            $laporan_user = $this->Laporan_model->getLaporan('id_user', $id_user);
+            $pelapor = $this->Auth_model->getUser('level', 2);
+            $pemberitahuan = $this->Pemberitahuan_model->getPemberitahuan('id_penerima_not_readed', $id_user);
+
+            if (!$laporan) {
+                $count_laporan = 0;
+            } else {
+                $count_laporan = count($laporan);
+            }
+
+            if (!$laporan_user) {
+                $count_laporan_user = 0;
+            } else {
+                $count_laporan_user = count($laporan_user);
+            }
+
+            if (!$pelapor) {
+                $count_pelapor = 0;
+            } else {
+                $count_pelapor = count($pelapor);
+            }
+
+            if (!$pemberitahuan) {
+                $count_pemberitahuan = 0;
+            } else {
+                $count_pemberitahuan = count($pemberitahuan);
+            }
+
+            $this->response([
+                'status' => true,
+                'message' => 'Data Berhasil Didapatkan',
+                'count_laporan' => $count_laporan,
+                'count_laporan_user' => $count_laporan_user,
+                'count_pelapor' => $count_pelapor,
+                'count_pemberitahuan' => $count_pemberitahuan,
+                'laporan' => $laporan,
+            ], 200);
         }
     }
 

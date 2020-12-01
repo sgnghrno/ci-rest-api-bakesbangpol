@@ -36,6 +36,7 @@
                                 <thead>
                                     <tr>
                                         <th>Nama</th>
+                                        <th>Laporan</th>
                                         <th>Jenis Kelamin</th>
                                         <th>Telepon</th>
                                         <th>Email</th>
@@ -57,6 +58,14 @@
                                                     <a href="<?= base_url('admin/deleteuser/') . $user['id_user']; ?>" class="text-small text-danger action-delete">Hapus</a>
                                                 </p>
                                             </td>
+                                            <td class="align-middle text-center">
+                                                <?php
+                                                $id_user_now = $user['id_user'];
+                                                $current_user = $this->db->query("SELECT tb_laporan.id_user, COUNT(tb_laporan.id_laporan) AS total_laporan FROM tb_laporan WHERE tb_laporan.id_user = $id_user_now GROUP BY tb_laporan.id_user")->row_array();
+
+                                                echo $current_user['total_laporan'] == null ? '-' : $current_user['total_laporan'];
+                                                ?>
+                                            </td>
                                             <td class="align-middle"><?= $user['jenis_kelamin'] == null ? '-' : $user['jenis_kelamin']; ?></td>
                                             <td class="align-middle"><?= $user['telepon'] == null ? '-' : $user['telepon']; ?></td>
                                             <td class="align-middle"><?= $user['email'] == null ? '-' : $user['email']; ?></td>
@@ -75,6 +84,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>Nama</th>
+                                        <th>Laporan</th>
                                         <th>Jenis Kelamin</th>
                                         <th>Telepon</th>
                                         <th>Email</th>
