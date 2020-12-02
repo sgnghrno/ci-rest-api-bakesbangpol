@@ -19,9 +19,13 @@ class Auth_model extends CI_Model
         return $this->db->insert('tb_user', $data);
     }
 
-    public function getUser($tipe, $param = NULL)
+    public function getUser($tipe, $param = NULL, $limit = NULL)
     {
         $this->db->order_by('id_user', 'DESC');
+
+        if ($limit != NULL) {
+            $this->db->limit($limit);  
+        }
 
         if ($tipe == 'all') {
             return $this->db->get('tb_user')->result_array();

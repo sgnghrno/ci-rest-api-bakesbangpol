@@ -30,7 +30,7 @@ class Admin extends CI_Controller
         $data['sub_menu_action'] = null;
         // user data
         $data['user'] = $this->Auth_model->getUser('id_user', $this->session->userdata['id_user']);
-        $data['all_user'] = $this->Auth_model->getUser('all');
+        $data['all_user'] = $this->Auth_model->getUser('all', NULL, '12');
         // login history data
         $data['login_history'] = $this->Login_model->getLatestLoginWithLimit(6);
         $data['count_laporan'] = count($this->Laporan_model->getLaporan('all'));
